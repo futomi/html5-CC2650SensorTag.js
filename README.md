@@ -25,6 +25,7 @@ This package includes a sample application "[TI CC2650 SensorTag Monitor](https:
 * [W3C - Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/)
 * [Google Developers - Interact with Bluetooth devices on the Web](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web)
 * [Web Blutooth Samples](https://googlechrome.github.io/samples/web-bluetooth/)
+
 ---------------------------------------
 ## <a name="License"> License</a>
 
