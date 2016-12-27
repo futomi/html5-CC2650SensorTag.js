@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TI CC2650 SensorTag Monitor</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- d3.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<!-- epoch.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/epoch/0.8.4/js/epoch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/epoch/0.8.4/css/epoch.min.css">
+<!-- CC2650SensorTag.js -->
+<script src="../../CC2650SensorTag.js"></script>
+<link href="style.css" rel="stylesheet">
+<script src="monitor.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<h1><a class="navbar-brand" href="https://github.com/futomi/html5-CC2650SensorTag.js" target="_blank">TI CC2650 SensorTag Monitor</a></h1>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<form class="navbar-form navbar-right">
+				<button type="button" class="btn btn-default btn-sm connect">Connect</button>
+			</form>
+		</div>
+	</div>
+</nav>
+
+<div class="container theme-showcase" role="main" id="main-wrapper">
+	<div class="home-page">
+		<img src="imgs/cc2650.png" class="cc2650" alt="SimpleLink™ Bluetooth low energy/Multi-standard SensorTag (CC2650STK)">
+		<p>This web application is a demo of the &quot;<a href="https://github.com/futomi/html5-CC2650SensorTag.js" target="_blank">html-CC2650SensorTag.js</a>&quot;, which shows the measurement result reported by a <a href="http://www.ti.com/tool/cc2650stk" target="_blank">SimpleLink™ Bluetooth low energy/Multi-standard SensorTag (CC2650STK)</a> in real time.</p>
+		<p>The &quot;html-CC2650SensorTag.js&quot; is a JavaScript library using the W3C <a href="https://webbluetoothcg.github.io/web-bluetooth/" target="_blank">Web Bluetooth</a> API. The API is implemented in Chrome for Mac, Linux, Chrome OS, and Android M experimentally. Though the API was implemented in Chrome 55 and earlier, it is strongly recommended to use Chrome 56 or later. Unfortunately, the API is disabled by default for now. You can enable it turning on the <code>enable-experimental-web-platform-features</code> flag.</p>
+		<p>In order to try this web application, turn on your CC2650 pressing the power button (on the right side of your CC2650). If your CC2650 is turned on successfully, you will find the green LED is blinking. Then press the &quot;Connect&quot; button on this web application below. Your Chrome will show you a dialog window which shows found devices. Selecting your CC2650, this web application will establish a connection with the CC2650, then show you the measurement results coming from your CC2650.</p>
+		<p><button type="button" class="btn btn-default btn-block connect">Connect</button></p>
+		<p>After this web application establishes a connection with your CC2650 successfully, you will see the result like the capture below:</p>
+		<p><img src="imgs/example.jpg" alt="" class="img-responsive img-thumbnail"></p>
+		<p>This web application supports most of the sensing data provided by the CC2650. Besides, it supports IO Service (turning on/off the LEDs and the buzzer) and Simple Key Service (detecting whether the buttons on the CC2650 are pressed or released).</p>
+	</div>
+	<div class="repo-page">
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h2>IO Service / Simple Keys Service</h2>
+			</div>
+			<div class="panel-body">
+				<div id="led-box">
+					<span class="right-button glyphicon glyphicon-circle-arrow-left released"></span>
+					<span class="right-button glyphicon glyphicon-circle-arrow-right pressed" style="display: none;"></span>
+					<img src="imgs/led00.png" class="led led00" alt="">
+					<img src="imgs/led10.png" class="led led10" alt="" style="display: none;">
+					<img src="imgs/led01.png" class="led led01" alt="" style="display: none;">
+					<img src="imgs/led11.png" class="led led11" alt="" style="display: none;">
+					<span class="left-button glyphicon glyphicon-circle-arrow-right released"></span>
+					<span class="left-button glyphicon glyphicon-circle-arrow-left pressed" style="display: none;"></span>
+				</div>
+				<p>Pressing the buttons below, you can turn on/off the LEDs and the buzzer.</p>
+				<p>
+					<button type="button" id="led-green" class="btn btn-default btn-sm">Green LED</button>
+					<button type="button" id="led-red" class="btn btn-default btn-sm">Red LED</button>
+					<button type="button" id="buzzer" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-play"></span> Buzzer</button>
+				</p>
+				<p>When you press the buttons on the CC2650, the indicaters will be shown on either side of the picture.</p>
+			</div>
+		</section>
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h2>IR Temperature Sensor (<a href="http://www.ti.com/product/tmp007" target="_blank">TMP007</a>)</h2>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<figure class="graph-box">
+							<figcaption>Ambience temperature (<span id="irtempamb-value">-</span> °C)</figcaption>
+							<div id="irtempamb" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+					<div class="col-md-6">
+						<figure class="graph-box">
+							<figcaption>Object temperature (<span id="irtempobj-value">-</span> °C)</figcaption>
+							<div id="irtempobj" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h2>Movement Sensor (<a href="https://www.invensense.com/products/motion-tracking/9-axis/mpu-9250/" target="_blank">MPU9250</a>)</h2>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-4">
+						<figure class="graph-box">
+							<figcaption>
+								Gyroscope
+								<small>
+									(X: <span id="movementgyrx-value">-</span>,
+									 Y: <span id="movementgyry-value">-</span>,
+									 Z: <span id="movementgyrz-value">-</span> deg/s)
+								</small>
+							</figcaption>
+							<div id="movementgyr" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+					<div class="col-md-4">
+						<figure class="graph-box">
+							<figcaption>
+								Accelerometer
+								<small>
+									(X: <span id="movementaccx-value">-</span>,
+									 Y: <span id="movementaccy-value">-</span>,
+									 Z: <span id="movementaccz-value">-</span> G)
+								</small>
+							</figcaption>
+							<div id="movementacc" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+					<div class="col-md-4">
+						<figure class="graph-box">
+							<figcaption>
+								Magnetometer
+								<small>
+									(X: <span id="movementmagx-value">-</span>,
+									 Y: <span id="movementmagy-value">-</span>,
+									 Z: <span id="movementmagz-value">-</span> uT)
+								</small>
+							</figcaption>
+							<div id="movementmag" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h2>Humidity Sensor (<a href="http://www.ti.com/product/hdc1000" target="_blank">HDC1000</a>)</h2>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<figure class="graph-box">
+							<figcaption>Humidity (<span id="humidityhum-value">-</span> %)</figcaption>
+								<div id="humidityhum" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+					<div class="col-md-6">
+						<figure class="graph-box">
+							<figcaption>Temperature (<span id="humiditytmp-value">-</span> °C)</figcaption>
+							<div id="humiditytmp" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h2>Barometric Pressure Sensor (<a href="https://www.bosch-sensortec.com/bst/products/all_products/bmp280" target="_blank">BMP280</a>)</h2>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<figure class="graph-box">
+							<figcaption>Barometric Pressure (<span id="pressurepre-value">-</span> hPa)</figcaption>
+							<div id="pressurepre" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+					<div class="col-md-6">
+						<figure class="graph-box">
+							<figcaption>Temperature (<span id="pressuretmp-value">-</span> °C)</figcaption>
+							<div id="pressuretmp" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h2>Optical Sensor (<a href="http://www.ti.com/product/opt3001" target="_blank">OPT3001</a>)</h2>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<figure class="graph-box">
+							<figcaption>Barometric Pressure (<span id="optical-value">-</span> Lux)</figcaption>
+							<div id="optical" class="epoch category10" style="width: 300px; height: 100px;"></div>
+						</figure>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h2>Device Information</h2>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<dl class="dl-horizontal">
+							<dt>System ID</dt>
+							<dd id="device-info-system"></dd>
+							<dt>Model Number</dt>
+							<dd id="device-info-model"></dd>
+							<dt>Firmware Revision</dt>
+							<dd id="device-info-firm"></dd>
+						</dl>
+					</div>
+					<div class="col-md-6">
+						<dl class="dl-horizontal">
+							<dt>Hardware Revision</dt>
+							<dd id="device-info-hard"></dd>
+							<dt>Software Revision</dt>
+							<dd id="device-info-soft"></dd>
+							<dt>Manufacturer Name</dt>
+							<dd id="device-info-manu"></dd>
+							<dt>Battery Level</dt>
+							<dd><span id="battery-level"></span> %</dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<footer class="footer">
+	<div class="container">
+		<p class="text-muted">Copyright &copy; 2016, Futomi Hatano, All rights reserved. Code licensed MIT</p>
+	</div>
+</footer>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="message-modal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"></h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-message"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="connecting-modal" data-backdrop="static">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Connecting...</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-message"></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

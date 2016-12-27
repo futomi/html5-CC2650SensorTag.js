@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Web Bluetooth Test</title>
+<script src="../CC2650SensorTag.js"></script>
+</head>
+<body>
+
+<button type="button" id="find-btn">Find</button>
+
+<script>
+(function() {
+
+document.getElementById('find-btn').addEventListener('click', () => {
+	var tag = new CC2650SensorTag();
+	tag.discover().then((info) => {
+		console.log('A ' + info.name + ' was selected: ' + info.id);
+		console.log('Connecting to the selected device...');
+		return tag.connect();
+	}).then(() => {
+		console.log('Connedcted.');
+		console.log('Reading the battery level...');
+		return tag.readBatteryLevel();
+	}).then((data) => {
+		console.log(data['level'] + ' %');
+		console.log('Starting the battery notifications...');
+		return tag.startBatteryNotifications();
+	}).then(() => {
+		console.log('Done.');
+		tag.onbatterynotify = function(data) {
+			console.log(data['level'] + ' %');
+		};
+	}).catch((error) => {
+		console.dir(error);
+	});
+}, false);
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	/* font-family: "游ゴシック", YuGothic, "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", sans-serif; */
+	width: 100%;
+	height: 100%;
+	margin-bottom: 35px;
+}
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 35px;
+	background-color: #f5f5f5;
+}
+.footer > .container {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+.footer > .container .text-muted {
+  margin: 10px 0;
+  font-size: 80%;
+}
+h1 {
+	margin: 0;
+}
+h2 {
+	font-size: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+#main-wrapper {
+	margin-top: 5em;
+}
+#main-wrapper div.home-page {
+	display: block;
+}
+#main-wrapper div.repo-page {
+	display: none;
+}
+#main-wrapper.connected div.home-page {
+	display: none;
+}
+#main-wrapper.connected div.repo-page {
+	display: block;
+}
+
+img.cc2650 {
+	float: left;
+	margin-right: 1em;
+	margin-bottom: 0.5em;
+}
+
+#led-box {
+	float: left;
+	margin-right: 1em;
+	margin-bottom: 0.5em;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+#led-box span.right-button {
+	font-size: 160%;
+	color: #cccccc;
+}
+#led-box span.right-button.pressed {
+	color: #000000;
+}
+#led-box span.left-button {
+	font-size: 140%;
+	color: #cccccc;
+}
+#led-box span.left-button.pressed {
+	color: #000000;
+}
+
+figure.graph-box {
+	margin-bottom: 0.5em;
+}
+figure.graph-box figcaption {
+	margin-bottom: 0.5em;
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#irtempamb .ambience-temperature .line {
+	stroke: #cc0000;
+}
+#irtempamb .ambience-temperature .area {
+	fill: #cc0000;
+}
+
+#irtempobj .object-temperature .line {
+	stroke: #cc0000;
+}
+#irtempobj .object-temperature .area {
+	fill: #cc0000;
+}
+
+#humidityhum .humidity .line {
+	stroke: #cc0000;
+}
+#humidityhum .humidity .area {
+	fill: #cc0000;
+}
+
+#humiditytmp .temperature .line {
+	stroke: #cc0000;
+}
+#humiditytmp .temperature .area {
+	fill: #cc0000;
+}
+
+#pressurepre .barometric-pressure .line {
+	stroke: #cc0000;
+}
+#pressurepre .barometric-pressure .area {
+	fill: #cc0000;
+}
+
+#pressuretmp .temperature .line {
+	stroke: #cc0000;
+}
+#pressuretmp .temperature .area {
+	fill: #cc0000;
+}
+
+#optical .light .line {
+	stroke: #cc0000;
+}
+#optical .light .area {
+	fill: #cc0000;
+}

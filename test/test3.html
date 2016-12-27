@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Web Bluetooth Test</title>
+<script src="../CC2650SensorTag.js"></script>
+</head>
+<body>
+
+<button type="button" id="find-btn">Find</button>
+
+<script>
+(function() {
+
+document.getElementById('find-btn').addEventListener('click', () => {
+	var tag = new CC2650SensorTag();
+	tag.discover().then((info) => {
+		console.log('A ' + info.name + ' was selected: ' + info.id);
+		console.log('Connecting to the selected device...');
+		return tag.connect();
+	}).then(() => {
+		var c = {
+			movement: {
+				enable_gyroscope_x: true,
+				enable_gyroscope_y: true,
+				enable_gyroscope_z: true,
+				enable_accelerometer_x: true,
+				enable_accelerometer_y: true,
+				enable_accelerometer_z: true,
+				enable_magnetometer: true
+			}
+		};
+		return tag.writeConfigurations(c);
+	}).then((config) => {
+		console.dir(config);
+		return tag.startMovementNotifications();
+	}).then(() => {
+		tag.onmovementnotify = function(data) {
+			console.dir(data);
+		};
+		console.log('Started to monitor the notifications of the movement service.');
+		window.setTimeout(() => {
+			tag.stopMovementNotifications().then(() => {
+				console.log('Stopped to monitor the notifications of the movement service.');
+				tag.disconnect();
+				console.log('Disconnected.');
+			}).catch((error) => {
+				console.dir(error);
+			});
+		}, 5000);
+	}).catch((error) => {
+		console.dir(error);
+	});
+}, false);
+
+})();
+</script>
+
+</body>
+</html>

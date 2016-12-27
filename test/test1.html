@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Web Bluetooth Test</title>
+<script src="../CC2650SensorTag.js"></script>
+</head>
+<body>
+
+<button type="button" id="find-btn">Find</button>
+
+<script>
+(function() {
+
+document.getElementById('find-btn').addEventListener('click', () => {
+	var tag = new CC2650SensorTag();
+	tag.discover().then((info) => {
+		console.log('A ' + info.name + ' was selected: ' + info.id);
+		console.log('Connecting to the selected device...');
+		return tag.connect();
+	}).then(() => {
+		console.log('Connected.');
+		console.log('Reading the device information...');
+		return tag.readDeviceInformation();
+	}).then((info) => {
+		console.dir(info);
+		console.log('Reading the configurations...');
+		return tag.readConfigurations();
+	}).then((config) => {
+		console.dir(config);
+		console.log('Writing the configurations...');
+		var c = {
+			temperature: {
+				enable_ir_temperature_sensor: true
+			},
+			movement: {
+				enable_gyroscope_x: true,
+				enable_gyroscope_y: true,
+				enable_gyroscope_z: true,
+				enable_accelerometer_x: true,
+				enable_accelerometer_y: true,
+				enable_accelerometer_z: true,
+				enable_magnetometer: true,
+				enable_wake_on_motion: true,
+				accelerometer_range: 2 // 0=2G, 1=4G, 2=8G, 3=16G
+			},
+			humidity: {
+				enable_humidity_sensor: true
+			},
+			pressure: {
+				enable_barometric_pressure_sensor: true
+			},
+			optical: {
+				enable_optical_sensor: true
+			},
+			io: {
+				mode: 1
+			}
+		};
+		return tag.writeConfigurations(c);
+	}).then(() => {
+		console.log('Done.')
+		console.log('Reading the configurations...');
+		return tag.readConfigurations();
+	}).then((config) => {
+		console.dir(config);
+		console.log('Reading the periods...')
+		return tag.readPeriods();
+	}).then((periods) => {
+		console.dir(periods);
+		console.log('Writing the periods...');
+		var periods = {
+			temperature: 500, // The range is from 300 ms to 2550 ms. The default is 1000 ms.
+			movement   : 500, // The range is from 100 ms to 2550 ms. The default is 1000 ms.
+			humidity   : 500, // The range is from 100 ms to 2550 ms. The default is 1000 ms.
+			pressure   : 500, // The range is from 100 ms to 2550 ms. The default is 1000 ms.
+			optical    : 500  // The range is from 100 ms to 2550 ms. The default is 800 ms.
+		};
+		return tag.writePeriods(periods);
+	}).then(() => {
+		console.log('Done.')
+		console.log('Reading the periods...');
+		return tag.readPeriods();
+	}).then((periods) => {
+		console.dir(periods);
+		console.log('Reading the temperature...');
+		return tag.readTemperature();
+	}).then((res) => {
+		console.dir(res);
+		console.log('Reading the humidity...');
+		return tag.readHumidity();
+	}).then((res) => {
+		console.dir(res);
+		console.log('Reading the pressure...');
+		return tag.readPressure();
+	}).then((res) => {
+		console.dir(res);
+		console.log('Reading the optical...');
+		return tag.readOptical();
+	}).then((res) => {
+		console.dir(res);
+		console.log('Reading the movement...');
+		return tag.readMovement();
+	/*
+	}).then((res) => {
+		console.dir(res);
+		console.log('Setting `io.mode` to 1...');
+		var c = {
+			io: {
+				mode: 1
+			}
+		};
+		return tag.writeConfigurations(c);
+	*/
+	}).then(() => {
+		console.log('Red LED on');
+		return tag.redLedOn();
+	}).then(() => {
+		console.log('Green LED on');
+		return tag.greenLedOn();
+	}).then(() => {
+		console.log('Buzzer on');
+		return tag.buzzerOn();
+	}).then(() => {
+		window.setTimeout(() => {
+			console.log('Buzzer off');
+			tag.buzzerOff().then(() => {
+				console.log('Green LED off');
+				return tag.greenLedOff();
+			}).then(() => {
+				console.log('Red LED off');
+				return tag.redLedOff();
+			}).then(() => {
+				tag.disconnect();
+				console.log('Disconnected.');
+				console.log('OK!');
+			}).catch((error) => {
+				console.dir(error);
+			})
+		}, 3000);
+	}).catch((error) => {
+		console.dir(error);
+	});
+}, false);
+
+})();
+</script>
+
+</body>
+</html>
