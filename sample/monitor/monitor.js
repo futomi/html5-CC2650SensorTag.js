@@ -3,7 +3,7 @@
 *
 * Copyright (c) 2016, Futomi Hatano, All rights reserved.
 * Released under the MIT license
-* Date: 2016-12-27
+* Date: 2016-12-28
 * ---------------------------------------------------------------- */
 
 (function() {
@@ -278,7 +278,6 @@ SensorTagMonitor.prototype.hideConnectingModal = function() {
 
 
 SensorTagMonitor.prototype.onBatteryNotify = function(data) {
-	console.log(data['level']);
 	$('#battery-level').text(data['level']);
 };
 

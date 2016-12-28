@@ -3,7 +3,7 @@
 *
 * Copyright (c) 2016, Futomi Hatano, All rights reserved.
 * Released under the MIT license
-* Date: 2016-12-27
+* Date: 2016-12-28
 *
 * [References]
 *  - CC2650 SensorTag User's Guide
@@ -16,6 +16,7 @@
 * ---------------------------------------------------------------- */
 function CC2650SensorTag() {
 	/* Public properties */
+	this.name_prefix = 'CC2650 SensorTag';
 	this.connected = false;
 	this.onbatterynotify = null;
 	this.ontemperaturenotify = null;
@@ -37,27 +38,27 @@ function CC2650SensorTag() {
 			service: null, // BluetoothRemoteGATTService object
 			chars: {
 				system: { // System ID
-					uuid: 0x2a23,
+					uuid: '00002a23-0000-1000-8000-00805f9b34fb',
 					char: null // BluetoothRemoteGATTCharacteristic object
 				},
 				model: { // Model Number String
-					uuid: 0x2a24,
+					uuid: '00002a24-0000-1000-8000-00805f9b34fb',
 					char: null // BluetoothRemoteGATTCharacteristic object
 				},
 				firm: { // Firmware Revision String
-					uuid: 0x2a26,
+					uuid: '00002a26-0000-1000-8000-00805f9b34fb',
 					char: null // BluetoothRemoteGATTCharacteristic object
 				},
 				hard: { // Hardware Revision String
-					uuid: 0x2a27,
+					uuid: '00002a27-0000-1000-8000-00805f9b34fb',
 					char: null // BluetoothRemoteGATTCharacteristic object
 				},
 				soft: { // Software Revision String
-					uuid: 0x2a28,
+					uuid: '00002a28-0000-1000-8000-00805f9b34fb',
 					char: null // BluetoothRemoteGATTCharacteristic object
 				},
-				manu: { // Manufacturer Name String
-					uuid: 0x2a29,
+				manufacturer: { // Manufacturer Name String
+					uuid: '00002a29-0000-1000-8000-00805f9b34fb',
 					char: null // BluetoothRemoteGATTCharacteristic object
 				}
 			}
@@ -230,7 +231,6 @@ function CC2650SensorTag() {
 	/* -------------------------------------------------------
 	* Sensing period
 	*   - The unit is 1 ms.
-	*   - The range is from 300 ms to 2550 ms.
 	*   - Note that the effectual resolution is 10 ms.
 	* ----------------------------------------------------- */
 	this._periods = {
@@ -249,20 +249,16 @@ function CC2650SensorTag() {
 }
 
 /* ------------------------------------------------------------------
-* Method: discover([namePrefix[, callback]])
+* Method: discover([callback])
 * ---------------------------------------------------------------- */
-CC2650SensorTag.prototype.discover = function(name_prefix, callback) {
-	if(!name_prefix) {
-		name_prefix = 'CC2650 SensorTag'
-	}
-
+CC2650SensorTag.prototype.discover = function(callback) {
 	var service_uuid_list = [];
 	for(var name in this._services) {
 		service_uuid_list.push(this._services[name]['uuid']);
 	}
 	var promise = new Promise((resolve, reject) => {
 		navigator.bluetooth.requestDevice({
-			filters: [{namePrefix: name_prefix}],
+			filters: [{namePrefix: this.name_prefix}],
 			optionalServices: service_uuid_list
 		}).then((device) => {
 			this._device = device;
@@ -383,7 +379,7 @@ CC2650SensorTag.prototype._getService = function(name, callback) {
 			}
 		});
 	}).catch((error) => {
-		console.dir(error);
+		callback(error);
 	});
 };
 
@@ -605,7 +601,11 @@ CC2650SensorTag.prototype.writeConfigurations = function(config, callback) {
 				if(error) {
 					reject(error);
 				} else {
-					resolve(Object.assign({}, this._config));
+					this.readConfigurations().then(() => {
+						resolve(Object.assign({}, this._config));
+					}).catch((e) => {
+						reject(e);
+					});
 				}
 			});
 		}
@@ -822,7 +822,11 @@ CC2650SensorTag.prototype.writePeriods = function(periods, callback) {
 				if(error) {
 					reject(error);
 				} else {
-					resolve(Object.assign({}, this._periods));
+					this.readPeriods().then(() => {
+						resolve(Object.assign({}, this._periods));
+					}).catch((e) => {
+						reject(e);
+					});
 				}
 			});
 		}
