@@ -3,7 +3,7 @@
 *
 * Copyright (c) 2016, Futomi Hatano, All rights reserved.
 * Released under the MIT license
-* Date: 2016-12-28
+* Date: 2016-12-29
 * ---------------------------------------------------------------- */
 
 (function() {
@@ -183,6 +183,7 @@ SensorTagMonitor.prototype.disconnectDevice = function() {
 	this.device_connected = false;
 	this.el['wrapper'].removeClass('connected');
 	this.el['btn_con'].text('Connect');
+	window.scrollTo(0, 0);
 };
 
 SensorTagMonitor.prototype.connectDevice = function() {
@@ -245,6 +246,7 @@ SensorTagMonitor.prototype.connectDevice = function() {
 		this.device_connected = true;
 		this.adjustSize();
 		this.hideConnectingModal();
+		window.scrollTo(0, 0);
 	}).catch((error) => {
 		this.showMessageModal('Connection Error', error.message);
 	});
