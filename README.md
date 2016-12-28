@@ -1,7 +1,7 @@
 html5-CC2650SensorTag.js
 ===============
 
-The html5-CC2650SensorTag.js is a JavaScript library which access [SimpleLink™ Bluetooth low energy/Multi-standard SensorTag (CC2650STK)](http://www.ti.com/tool/cc2650stk) using W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API.
+The html5-CC2650SensorTag.js is a JavaScript library which access [SimpleLink™ Bluetooth low energy/Multi-standard SensorTag (CC2650STK)](http://www.ti.com/tool/cc2650stk) using the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API.
 
 The html5-CC2650SensorTag.js allows you to get the measurement result reported by a CC2650 SensorTag in real time and to control the LEDs and the buzzer easily without learning the details of W3C Web Bluetooth specification and the BLE profile of the CC2650 SensorTag.
 
@@ -17,14 +17,14 @@ The web browser has to support the W3C [Web Bluetooth](https://webbluetoothcg.gi
 
 * Chrome 56+ for Mac, Android M
 
-Though Chrome OS supports the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API, I have not checked if this JavaScript library works well on Chrome OS. 
+Though Chrome OS supports the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API, I have not checked if this JavaScript library works well on it. 
 
 ## Note
 
 Never use the html5-CC2650SensorTag.js in your production for the reasons as follows:
 
-* This JavaScript library is experimental. It is based on the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API which is been developing in W3C and it is unstable. In the future, the details of the specification may be changed and this JavaScript library may not work. 
-* For now, only Chrome implements the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API. Besides, the implementation is experimental. If you try the API, you have to enable the API accessing `chrome://flags`.
+* This JavaScript library is experimental. It is based on the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API which is under development in W3C and it is unstable. In the future, the details of the specification may be changed and this JavaScript library may not work. 
+* For now, only Chrome implements the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API. Besides, the implementation is experimental. When you try the API, you have to enable the API accessing `chrome://flags`.
 
 This JavaScript library is affected by the several restrictions derived from the W3C [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) API. It is strongly recommended to read the article &quot;[Interact with Bluetooth devices on the Web](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web)&quot; published in the web site &quot;[Google Developers Web](https://developers.google.com/web/)&quot;.
 
@@ -89,7 +89,7 @@ This JavaScript library is affected by the several restrictions derived from the
 ---------------------------------------
 ## <a name="Quick-Start"> Quick Start</a>
 
-This section shows how to use this JavaScript library. In this section, it is assumed that the HTML snippet below is written in your HTML:
+This section shows how to use this JavaScript library. In this section, it is assumed that the HTML snippet below is written in your HTML file:
 
 ```HTML
 <button type="button" id="find-btn">Find your CC2650 SensorTag</button>
@@ -130,7 +130,7 @@ document.getElementById('find-btn').addEventListener('click', () => {
 }, false);
 ```
 
-Note that the CC2650 SensorTag disables all sensors by default. Therefore, you have to enable sensors you want to use calling `writeConfiguration()` method. In the sample code above, the IR temperature sensor was enabled.
+Note that the CC2650 SensorTag disables all sensors by default. Therefore, you have to enable sensors you want to use calling the [`writeConfiguration()`](#writeConfiguration-method) method. In the sample code above, the IR temperature sensor was enabled.
 
 ### <a name="Quick-Start-2">Starting notifications</a>
 
@@ -157,6 +157,8 @@ document.getElementById('find-btn').addEventListener('click', () => {
   });
 }, false);
 ```
+
+In order to enable the notifications, the [`startTemperatureNotifications()`](#startTemperatureNotifications-method) has to be called. Besides, an event handler has to be set in advance. In this case, an event handler is set to the [`ontemperaturenotify`] property.
 
 ### <a name="Quick-Start-3">Enabling multiple sensors simultaneously</a>
 
@@ -207,9 +209,9 @@ document.getElementById('find-btn').addEventListener('click', () => {
 
 ### <a name="Quick-Start-4">Changing the interval of notifications</a>
 
-The CC2650 SensorTag notifies the measurement results per 1000 milliseconds (1 second) for each sensor by default. But the interval might be too long in some cases. If you want to change the interval, you can use the `writePeriods()` methods.
+The CC2650 SensorTag notifies the measurement results per 1000 milliseconds (1 second) for each sensor by default. But the interval might be too long or too short in some cases. If you want to change the interval, you can use the [`writePeriods()`](#writePeriods-method) method.
 
-The code below shows how to change the notification interval for each sensor using the `writePeriods()` method.
+The code below shows how to change the notification interval for each sensor using the [`writePeriods()`](#writePeriods-method) method.
 
 ```JavaScript
 document.getElementById('find-btn').addEventListener('click', () => {
@@ -263,7 +265,7 @@ document.getElementById('find-btn').addEventListener('click', () => {
 ---------------------------------------
 ## <a name="CC2650SensorTag-object">CC2650SensorTag object</a>
 
-In order to use the `CC2650SensorTag.js`, you have to create a `CC2650SensorTag` object from the `CC2650SensorTag` constructor as follows:
+First of all, you have to create a `CC2650SensorTag` object from the `CC2650SensorTag` constructor as follows:
 
 ```JavaScript
 var tag = new CC2650SensorTag();
@@ -271,7 +273,7 @@ var tag = new CC2650SensorTag();
 
 In the code above, the variable `tag` represents a `CC2650SensorTag` object. All methods and properties are implemented in the `CC2650SensorTag` object.
 
-Note that this code has to be executed after a user action such as a button click. This is due to the W3C Web Bluetooth API.
+Note that this code has to be executed after a user action such as a button click. This is due to the restriction defined in the W3C Web Bluetooth API.
 
 ```html
 <button type="button" id="find-btn">Find your CC2650 SensorTag</button>
@@ -317,7 +319,7 @@ tag.discover(() => {
 });
 ```
 
-If you use the callback coding style, note that 2 arguments are passed to the callback function: the 1st argument is an `Error` object, the 2nd argument is an object representing the result of the method.
+If you code in the callback style, note that 2 arguments are passed to the callback function: the 1st argument is an `Error` object, the 2nd argument is an object representing the result of the method. If the method was executed successfully, the 1st argument will be `null`.
 
 Note that such asynchronous methods don't return a `Promise` object if you pass a callback function to the method.
 
@@ -325,7 +327,7 @@ Note that such asynchronous methods don't return a `Promise` object if you pass 
 
 This method starts to scan nearby CC2650 SensorTags. Calling this method, the Chrome shows a device chooser (dialog) to the user.
 
-When the user chooses a device from the device chooser or cancels, a `Promise` object will be returned as long as the `callback` was not passed.
+When the user chooses a device from the device chooser or cancels, a `Promise` object will be returned.
 
 ```JavaScript
 tag.discover().then((info) => {
@@ -344,9 +346,9 @@ Property | Type   | Description
 `id`     | String | The identifier of the device.
 `name`   | String | The device name.
 
-The `id` is a unique random string which the Chrome generates for each device. It is meaningless itself. It is just used to distinguish devices which have the same name.
+The `id` is an unique random string which the Chrome generates for each device. It is meaningless in itself. It is just used to distinguish devices which have the same name.
 
-If you want to use callback coding style instead of promise coding style, you can specify a callback function as the 1st argument.
+If you want to code in the callback style instead of the promise style, you can pass a callback function to this method as the 1st argument.
 
 ```JavaScript
 tag.discover((info) => {
@@ -370,7 +372,7 @@ tag.discover().then(() => {
 
 #### <a name="disconnect-method">disconnect()</a>
 
-This method disconnect the device. Note that this method is not asynchronous unlike the other methods. Therefore this method does not return anything.
+This method disconnects the device. Note that this method is not asynchronous unlike the other methods. Therefore this method does not return anything.
 
 ```JavaScript
 tag.disconnect();
@@ -380,7 +382,7 @@ Note that the `ondisconnect` event handler is **not** called when the device was
 
 #### <a name="readDeviceInformation-method">readDeviceInformation(*[callback]*)</a>
 
-This method starts to read the device information from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the device information from the targeted device and returns a `Promise` object.
 
 ```JavaScript
 tag.readDeviceInformation().then((info) => {
@@ -399,11 +401,9 @@ Property       | Type   | Description
 `soft`         | String | Software Revision
 `manufacturer` | String | Manufacturer Name
 
-Note that this method can be called without setting any configurations using [`writeConfigurations()`](writeConfigurations-method) method.
-
 #### <a name="readBatteryLevel-method">readBatteryLevel(*[callback]*)</a>
 
-This method starts to read the battery level from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the battery level from the targeted device and returns a `Promise` object.
 
 ```JavaScript
 tag.readBatteryLevel().then((data) => {
@@ -417,11 +417,9 @@ Property       | Type   | Description
 :--------------|:-------|:-----------
 `level`        | Number | Battery level (percentage)
 
-Note that this method can be called without setting any configurations using [`writeConfigurations()`](writeConfigurations-method) method.
-
 #### <a name="readConfigurations-method">readConfigurations(*[callback]*)</a>
 
-This method starts to read the configurations from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the configurations from the targeted device and returns a `Promise` object.
 
 ```JavaScript
 tag.readConfigurations().then((config) => {
@@ -429,18 +427,15 @@ tag.readConfigurations().then((config) => {
 });
 ```
 
-A [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object is passed to the fulfillment handler.
-
-Note that this method can be called without setting any configurations using [`writeConfigurations()`](writeConfigurations-method) method.
-
+If this method was executed successsfully, a [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object will be passed to the fulfillment handler. In the sample code above, the variable `config` represents the [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object.
 
 #### <a name="writeConfigurations-method">writeConfigurations(*config[, callback]*)</a>
 
-This method starts to write the specified configurations to the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to write the specified configurations to the targeted device and returns a `Promise` object.
 
-A hash object must be passed to this method, which includes the configurations you want to set. The hash object is part of the [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object. When you create the hash object, the structure of the object must be as same as the [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object.
+A hash object must be passed to this method as the 1st argument, which includes the configurations you want to set. The hash object is part of the [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object. When you create the hash object, the structure of the object must be as same as the [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object.
 
-If the configuration were successfully written, a [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object representing the latest configurations will be passed to the fulfillment handler.
+If the configurations were successfully written, a [`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigurations-object) object representing the latest configurations will be passed to the fulfillment handler.
 
 The code below shows how to enable the gyroscope and the barometric pressure sensor:
 
@@ -466,7 +461,7 @@ See the section &quot;[`CC2650SensorTagConfigurations`](#CC2650SensorTagConfigur
 
 #### <a name="readPeriods-method">readPeriods(*[callback]*)</a>
 
-This method starts to read the period settings for notifications from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the period settings for notifications from the targeted device and returns a `Promise` object.
 
 ```JavaScript
 tag.readPeriods().then((periods) => {
@@ -476,17 +471,15 @@ tag.readPeriods().then((periods) => {
 
 A [`CC2650SensorTagPeriods`](#CC2650SensorTagPeriods-object) object is passed to the fulfillment handler.
 
-Note that this method can be called without setting any configurations using [`writeConfigurations()`](writeConfigurations-method) method.
-
 #### <a name="writePeriods-method">writePeriods(*periods, [callback]*)</a>
 
-This method starts to write the specified period settings to the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to write the specified period settings to the targeted device and returns a `Promise` object.
 
-A hash object must be passed to this method, which includes the period settings you want to set. The hash object is part of the [`CC2650SensorTagPeriods`](#CC2650SensorTagPeriods-object) object. When you create the hash object, the structure of the object must be as same as the [`CC2650SensorTagPeriods`](#CC2650SensorTagPeriods-object) object.
+A hash object must be passed to this method as the 1st argument, which includes the period settings you want to set. The hash object is part of the [`CC2650SensorTagPeriods`](#CC2650SensorTagPeriods-object) object. When you create the hash object, the structure of the object must be as same as the [`CC2650SensorTagPeriods`](#CC2650SensorTagPeriods-object) object.
 
 If the period settings were successfully written, a [`CC2650SensorTagPeriods`](#CC2650SensorTagPeriods-object) object representing the latest period settings will be passed to the fulfillment handler.
 
-The code below shows how to change the period settings for the IR temperature sensor and the gyroscope/accelerometer/magnetometer:
+The code below shows how to change the period settings for the IR temperature sensor and the movement sensor (gyroscope/accelerometer/magnetometer):
 
 ```JavaScript
 var p = {
@@ -503,7 +496,7 @@ See the section &quot;[`CC2650SensorTagPeriods`](#CC2650SensorTagPeriods-object)
 
 #### <a name="readTemperature-method">readTemperature(*[callback]*)</a>
 
-This method starts to read the measurement result of the IR temperature sensor ([TMP00](http://www.ti.com/product/tmp007)) from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the measurement result of the IR temperature sensor ([TMP00](http://www.ti.com/product/tmp007)) from the targeted device and returns a `Promise` object.
 
 Note that the configuration parameter `temperature.enable_ir_temperature_sensor` must be set to `true` before this method is called. See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
 
@@ -530,21 +523,9 @@ Property   | Type   | Description
 
 #### <a name="readMovement-method">readMovement(*[callback]*)</a>
 
-This method starts to read the measurement result of the movement sensor ([MPU9250](https://www.invensense.com/products/motion-tracking/9-axis/mpu-9250/)) from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the measurement result of the movement sensor ([MPU9250](https://www.invensense.com/products/motion-tracking/9-axis/mpu-9250/)) from the targeted device and returns a `Promise` object.
 
-Note that the configuration parameters related to the sensor must be set to `true` before this method is called. The configuration parameters related to this sensor are as follows:
-
-```
-movement.enable_gyroscope_x
-movement.enable_gyroscope_y
-movement.enable_gyroscope_z
-movement.enable_accelerometer_x
-movement.enable_accelerometer_y
-movement.enable_accelerometer_z
-movement.enable_magnetometer
-```
-
-See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
+Note that the configuration parameters related to the movement sensor must be set to `true` before this method is called. See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
 
 ```JavaScript
 var c = {
@@ -580,7 +561,7 @@ Property | Type   | Description
 
 #### <a name="readHumidity-method">readHumidity(*[callback]*)</a>
 
-This method starts to read the measurement result of the humidity sensor ([HDC1000](http://www.ti.com/product/hdc1000)) from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the measurement result of the humidity sensor ([HDC1000](http://www.ti.com/product/hdc1000)) from the targeted device and returns a `Promise` object.
 
 Note that the configuration parameter `humidity.enable_humidity_sensor` must be set to `true` before this method is called. See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
 
@@ -607,7 +588,7 @@ Property      | Type   | Description
 
 #### <a name="readPressure-method">readPressure(*[callback]*)</a>
 
-This method starts to read the measurement result of the barometric pressure sensor ([BMP280](https://www.bosch-sensortec.com/bst/products/all_products/bmp280)) from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the measurement result of the barometric pressure sensor ([BMP280](https://www.bosch-sensortec.com/bst/products/all_products/bmp280)) from the targeted device and returns a `Promise` object.
 
 Note that the configuration parameter `pressure.enable_barometric_pressure_sensor` must be set to `true` before this method is called. See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
 
@@ -634,7 +615,7 @@ Property      | Type   | Description
 
 #### <a name="readOptical-method">readOptical(*[callback]*)</a>
 
-This method starts to read the measurement result of the optical sensor ([OPT3001](http://www.ti.com/product/opt3001)) from the targeted device and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method starts to read the measurement result of the optical sensor ([OPT3001](http://www.ti.com/product/opt3001)) from the targeted device and returns a `Promise` object.
 
 Note that the configuration parameter `optical.enable_optical_sensor` must be set to `true` before this method is called. See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
 
@@ -657,11 +638,9 @@ Property  | Type   | Description
 :---------|:-------|:-----------
 `light`   | Number | Luminance (LUX)
 
-Note that the configuration parameter `optical.enable_optical_sensor` must be set to `true` before this method is called. See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
-
 #### <a name="redLedOn-method">redLedOn(*[callback]*)</a>
 
-This method turns on the red LED and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method turns on the red LED and returns a `Promise` object.
 
 ```JavaScript
 tag.redLedOn().then(() => {
@@ -671,7 +650,7 @@ tag.redLedOn().then(() => {
 
 #### <a name="redLedOff-method">redLedOff(*[callback]*)</a>
 
-This method turns off the red LED and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method turns off the red LED and returns a `Promise` object.
 
 ```JavaScript
 tag.redLedOff().then(() => {
@@ -681,7 +660,7 @@ tag.redLedOff().then(() => {
 
 #### <a name="greenLedOn-method">greenLedOn(*[callback]*)</a>
 
-This method turns on the green LED and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method turns on the green LED and returns a `Promise` object.
 
 ```JavaScript
 tag.greenLedOn().then(() => {
@@ -691,7 +670,7 @@ tag.greenLedOn().then(() => {
 
 #### <a name="greenLedOff-method">greenLedOff(*[callback]*)</a>
 
-This method turns off the green LED and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method turns off the green LED and returns a `Promise` object.
 
 ```JavaScript
 tag.greenLedOff().then(() => {
@@ -701,7 +680,7 @@ tag.greenLedOff().then(() => {
 
 #### <a name="buzzerOn-method">buzzerOn(*[callback]*)</a>
 
-This method turns on the buzzer and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method turns on the buzzer and returns a `Promise` object.
 
 ```JavaScript
 tag.buzzerOn().then(() => {
@@ -711,7 +690,7 @@ tag.buzzerOn().then(() => {
 
 #### <a name="buzzerOff-method">buzzerOff(*[callback]*)</a>
 
-This method turns off the buzzer and returns a `Promise` object as long as the `callback` was not specified as an argument.
+This method turns off the buzzer and returns a `Promise` object.
 
 ```JavaScript
 tag.buzzerOff().then(() => {
@@ -721,7 +700,7 @@ tag.buzzerOff().then(() => {
 
 #### <a name="startBatteryNotifications-method">startBatteryNotifications(*[callback]*)</a>
 
-> *[CAUTION] The battery notifications does not work well for now. Though this method seems to be executed successfully, no notification is received. I don't know the reason.*
+> *[CAUTION] The battery notification does not work well for now. Though this method seems to be executed successfully, no notification is received. I don't know the reason.*
 
 This method requests to start the notifications of the battery. In order to receive the notifications, you have to attach an event handler to the [`onbatterynotify`](#onbatterynotify-property) property in advance.
 
@@ -734,7 +713,7 @@ tag.startBatteryNotifications().then(() => {
 });
 ```
 
-An hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readBatteryLevel()`](#readBatteryLevel-method) method. See the section "[`readBatteryLevel()`](#readBatteryLevel-method)" for details.
+A hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readBatteryLevel()`](#readBatteryLevel-method) method. See the section "[`readBatteryLevel()`](#readBatteryLevel-method)" for details.
 
 #### <a name="stopBatteryNotifications-method">stopBatteryNotifications(*[callback]*)</a>
 
@@ -770,7 +749,7 @@ tag.writeConfigurations(c).then(() => {
 });
 ```
 
-An hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readTemperature()`](#readTemperature-method) method. See the section "[`readTemperature()`](#readTemperature-method)" for details.
+A hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readTemperature()`](#readTemperature-method) method. See the section "[`readTemperature()`](#readTemperature-method)" for details.
 
 #### <a name="stopTemperatureNotifications-method">stopTemperatureNotifications(*[callback]*)</a>
 
@@ -786,19 +765,7 @@ tag.stopTemperatureNotifications().then(() => {
 
 This method requests to start the notifications of the movement sensor. In order to receive the notifications, you have to attach an event handler to the [`onmovementnotify`](#onmovementnotify-property) property in advance.
 
-Note that the configuration parameters related to the sensor must be set to `true` before this method is called. The configuration parameters related to this sensor are as follows:
-
-```
-movement.enable_gyroscope_x
-movement.enable_gyroscope_y
-movement.enable_gyroscope_z
-movement.enable_accelerometer_x
-movement.enable_accelerometer_y
-movement.enable_accelerometer_z
-movement.enable_magnetometer
-```
-
-See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
+Note that the configuration parameters related to the sensor must be set to `true` before this method is called. See the section [`writeConfigurations()`](writeConfigurations-method) method for details.
 
 ```JavaScript
 tag.onmovementnotify = function(data) {
@@ -823,7 +790,7 @@ tag.writeConfigurations(c).then(() => {
 });
 ```
 
-An hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readMovement()`](#readMovement-method) method. See the section "[`readMovement()`](#readMovement-method)" for details.
+A hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readMovement()`](#readMovement-method) method. See the section "[`readMovement()`](#readMovement-method)" for details.
 
 #### <a name="stopMovementNotifications-method">stopMovementNotifications(*[callback]*)</a>
 
@@ -859,7 +826,7 @@ tag.writeConfigurations(c).then(() => {
 });
 ```
 
-An hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readHumidity()`](#readHumidity-method) method. See the section "[`readHumidity()`](#readHumidity-method)" for details.
+A hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readHumidity()`](#readHumidity-method) method. See the section "[`readHumidity()`](#readHumidity-method)" for details.
 
 #### <a name="stopHumidityNotifications-method">stopHumidityNotifications(*[callback]*)</a>
 
@@ -886,7 +853,7 @@ tag.startPressureNotifications().then(() => {
 });
 ```
 
-An hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readPressure()`](#readPressure-method) method. See the section "[`readPressure()`](#readPressure-method)" for details.
+A hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readPressure()`](#readPressure-method) method. See the section "[`readPressure()`](#readPressure-method)" for details.
 
 #### <a name="stopPressureNotifications-method">stopPressureNotifications(*[callback]*)</a>
 
@@ -922,7 +889,7 @@ tag.writeConfigurations(c).then(() => {
 });
 ```
 
-An hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readOptical())`](#readOptical-method) method. See the section "[`readOptical()`](#readOptical-method)" for details.
+A hash object representing the measurement result is passed to the event handler as the 1st argument. The hash object is as same as the object obtained from the [`readOptical())`](#readOptical-method) method. See the section "[`readOptical()`](#readOptical-method)" for details.
 
 #### <a name="stopOpticalNotifications-method">stopOpticalNotifications(*[callback]*)</a>
 
@@ -956,7 +923,7 @@ tag.startKeysNotifications().then(() => {
 });
 ```
 
-An hash object representing the measurement result is passed to the event handler as the 1st argument, which has the properties as follows:
+A hash object representing the measurement result is passed to the event handler as the 1st argument, which has the properties as follows:
 
 Property      | Type    | Description
 :-------------|:--------|:-----------
@@ -1020,7 +987,7 @@ tag.ondisconnect = function() {
 
 This object is just a hash object representing the configurations of the targeted device. You can obtain this object through the [`readConfigurations()`](#readConfigurations-method) method. You can also write the configurations using the structure of this object through the [`writeConfigurations()`](#writeConfigurations-method).
 
-The structure of this object is follows:
+The structure of this object is as follows:
 
 Property                              | Type    | Description
 :-------------------------------------|:------- |:-----------
@@ -1081,7 +1048,7 @@ tag.writeConfigurations(c).then((conf) => {
 
 This object is just a hash object representing the period settings for notifications of the targeted device. You can obtain this object through the [`readPeriods()`](#readPeriods-method) method. You can also write the period settings using the structure of this object through the [`writePeriods()`](#writePeriods-method).
 
-The structure of this object is follows:
+The structure of this object is as follows:
 
 Property      | Type   | Description
 :-------------|:------ |:-----------
@@ -1096,8 +1063,8 @@ If you want to change the period settings for some sensors, you can use the [`wr
 
 ```JavaScript
 var p = {
-  temperature: 10000, // 10 seconds
-  movement   : 300,   // 300 milliseconds
+  temperature: 1500, // 1.5 seconds
+  movement   : 300,  // 300 milliseconds
 };
 tag.writePeriods(p).then((periods) => {
   console.log('The current period settings are as follows:');
