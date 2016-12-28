@@ -7,7 +7,7 @@ The html5-CC2650SensorTag.js allows you to get the measurement result reported b
 
 ## Sample Application
 
-This package includes a sample web application "[TI CC2650 SensorTag Monitor](https://rawgit.com/futomi/html5-CC2650SensorTag.js/master/sample/monitor/index.html)". You can try this JavaScript library with your CC2650 easily.
+This package includes a sample web application "[TI CC2650 SensorTag Monitor](https://rawgit.com/futomi/html5-CC2650SensorTag.js/master/sample/monitor/index.html)". You can try this JavaScript library without coding if you have a CC2650 SensorTag.
 
 ![TI CC2650 SensorTag Monitor](sample/monitor/imgs/example.jpg)
 
