@@ -3,7 +3,7 @@
 *
 * Copyright (c) 2016, Futomi Hatano, All rights reserved.
 * Released under the MIT license
-* Date: 2016-12-28
+* Date: 2016-12-29
 *
 * [References]
 *  - CC2650 SensorTag User's Guide
@@ -257,15 +257,19 @@ CC2650SensorTag.prototype.discover = function(callback) {
 		service_uuid_list.push(this._services[name]['uuid']);
 	}
 	var promise = new Promise((resolve, reject) => {
-		navigator.bluetooth.requestDevice({
-			filters: [{namePrefix: this.name_prefix}],
-			optionalServices: service_uuid_list
-		}).then((device) => {
-			this._device = device;
-			resolve({id: device.id, name: device.name});
-		}).catch((error) => {
-			reject(error);
-		});
+		if(navigator.bluetooth) {
+			navigator.bluetooth.requestDevice({
+				filters: [{namePrefix: this.name_prefix}],
+				optionalServices: service_uuid_list
+			}).then((device) => {
+				this._device = device;
+				resolve({id: device.id, name: device.name});
+			}).catch((error) => {
+				reject(error);
+			});
+		} else {
+			reject(new Error('Your browser does not support the Web Bluetooth API or disabled it. It is recomended to use the latest Chrome and enable the Web Bluetooth API.'));
+		}
 	});
 
 	if(this._isValidCallback(callback)) {
