@@ -1285,7 +1285,7 @@ CC2650SensorTag.prototype.startBatteryNotifications = function(callback) {
 };
 
 CC2650SensorTag.prototype._setBatteryNotifications = function(char) {
-	char.oncharacteristicvaluechanged = function(event) {
+	char.oncharacteristicvaluechanged = (event) => {
 		if(this.onbatterynotify && typeof(this.onbatterynotify) === 'function') {
 			var dataview = event.target.value;
 			var data = {
@@ -1293,7 +1293,7 @@ CC2650SensorTag.prototype._setBatteryNotifications = function(char) {
 			};
 			this.onbatterynotify(data);
 		}
-	}.bind(this);
+	};
 };
 
 /* ------------------------------------------------------------------
@@ -1361,13 +1361,13 @@ CC2650SensorTag.prototype.startTemperatureNotifications = function(callback) {
 };
 
 CC2650SensorTag.prototype._setTemperatureNotifications = function(char) {
-	char.oncharacteristicvaluechanged = function(event) {
+	char.oncharacteristicvaluechanged = (event) => {
 		if(this.ontemperaturenotify && typeof(this.ontemperaturenotify) === 'function') {
 			var dataview = event.target.value;
 			var data = this._parseDataValueTemperature(dataview);
 			this.ontemperaturenotify(data);
 		}
-	}.bind(this);
+	};
 };
 
 /* ------------------------------------------------------------------
@@ -1442,13 +1442,13 @@ CC2650SensorTag.prototype.startMovementNotifications = function(callback) {
 };
 
 CC2650SensorTag.prototype._setMovementNotifications = function(char) {
-	char.oncharacteristicvaluechanged = function(event) {
+	char.oncharacteristicvaluechanged = (event) => {
 		if(this.onmovementnotify && typeof(this.onmovementnotify) === 'function') {
 			var dataview = event.target.value;
 			var data = this._parseDataValueMovement(dataview);
 			this.onmovementnotify(data);
 		}
-	}.bind(this);
+	};
 };
 
 /* ------------------------------------------------------------------
@@ -1516,13 +1516,13 @@ CC2650SensorTag.prototype.startHumidityNotifications = function(callback) {
 };
 
 CC2650SensorTag.prototype._setHumidityNotifications = function(char) {
-	char.oncharacteristicvaluechanged = function(event) {
+	char.oncharacteristicvaluechanged = (event) => {
 		if(this.onhumiditynotify && typeof(this.onhumiditynotify) === 'function') {
 			var dataview = event.target.value;
 			var data = this._parseDataValueHumidity(dataview);
 			this.onhumiditynotify(data);
 		}
-	}.bind(this);
+	};
 };
 
 /* ------------------------------------------------------------------
@@ -1590,13 +1590,13 @@ CC2650SensorTag.prototype.startPressureNotifications = function(callback) {
 };
 
 CC2650SensorTag.prototype._setPressureNotifications = function(char) {
-	char.oncharacteristicvaluechanged = function(event) {
+	char.oncharacteristicvaluechanged = (event) => {
 		if(this.onpressurenotify && typeof(this.onpressurenotify) === 'function') {
 			var dataview = event.target.value;
 			var data = this._parseDataValuePressure(dataview);
 			this.onpressurenotify(data);
 		}
-	}.bind(this);
+	};
 };
 
 /* ------------------------------------------------------------------
@@ -1664,13 +1664,13 @@ CC2650SensorTag.prototype.startOpticalNotifications = function(callback) {
 };
 
 CC2650SensorTag.prototype._setOpticalNotifications = function(char) {
-	char.oncharacteristicvaluechanged = function(event) {
+	char.oncharacteristicvaluechanged = (event) => {
 		if(this.onopticalnotify && typeof(this.onopticalnotify) === 'function') {
 			var dataview = event.target.value;
 			var data = this._parseDataValueOptical(dataview);
 			this.onopticalnotify(data);
 		}
-	}.bind(this);
+	};
 };
 
 /* ------------------------------------------------------------------
@@ -1734,13 +1734,13 @@ CC2650SensorTag.prototype.startKeysNotifications = function(callback) {
 };
 
 CC2650SensorTag.prototype._setKeysNotifications = function(char) {
-	char.oncharacteristicvaluechanged = function(event) {
+	char.oncharacteristicvaluechanged = (event) => {
 		if(this.onkeysnotify && typeof(this.onkeysnotify) === 'function') {
 			var dataview = event.target.value;
 			var data = this._parseDataValueKeys(dataview);
 			this.onkeysnotify(data);
 		}
-	}.bind(this);
+	};
 };
 
 CC2650SensorTag.prototype._parseDataValueKeys = function(dataview) {
