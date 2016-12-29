@@ -268,7 +268,7 @@ CC2650SensorTag.prototype.discover = function(callback) {
 				reject(error);
 			});
 		} else {
-			reject(new Error('Your browser does not support the Web Bluetooth API or disabled it. It is recomended to use the latest Chrome and enable the Web Bluetooth API.'));
+			reject(new Error('Your browser does not support the Web Bluetooth API or disables it. It is recommended to use the latest Chrome and enable the Web Bluetooth API.'));
 		}
 	});
 
