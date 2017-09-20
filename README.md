@@ -992,25 +992,25 @@ The structure of this object is as follows:
 Property                              | Type    | Description
 :-------------------------------------|:------- |:-----------
 `temperature`                         | Object  | This object represents the configurations of the IR temperature service (IR temperature sensor)
->> `enable_ir_temperature_sensor`      | Boolean | The value `ture` means the IR temperature sensor is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_ir_temperature_sensor`      | Boolean | The value `ture` means the IR temperature sensor is enabled. The value `false` means it is disabled. The default value is `false`.
 `movement`                            | Object  | This object represents the configurations of the movement service (gyroscope, accelerometer, magnetometer)
->> `enable_gyroscope_x`                | Boolean | The value `true` means the gyroscope (x axis) is enabled. The value `false` means it is disabled. The default value is `false`.
->> `enable_gyroscope_y`                | Boolean | The value `true` means the gyroscope (y axis) is enabled. The value `false` means it is disabled. The default value is `false`.
->> `enable_gyroscope_z`                | Boolean | The value `true` means the gyroscope (z axis) is enabled. The value `false` means it is disabled. The default value is `false`.
->> `enable_accelerometer_x`            | Boolean | The value `true` means the accelerometer (x axis) is enabled. The value `false` means it is disabled. The default value is `false`.
->> `enable_accelerometer_y`            | Boolean | The value `true` means the accelerometer (y axis) is enabled. The value `false` means it is disabled. The default value is `false`.
->> `enable_accelerometer_z`            | Boolean | The value `true` means the accelerometer (z axis) is enabled. The value `false` means it is disabled. The default value is `false`.
->> `enable_magnetometer`               | Boolean | The value `true` means the magnetometer is enabled. The value `false` means it is disabled. The default value is `false`.
->> `enable_wake_on_motion`             | Boolean | The value `true` means the Wake On Motion is enabled. The value `false` means it is disabled. The default value is `false`.
->> `accelerometer_range`               | Number  | The value must be an integer in the range of 0 to 3: 0 means 2G, 1 means 4G, and 3 means 16G.
++-`enable_gyroscope_x`                | Boolean | The value `true` means the gyroscope (x axis) is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_gyroscope_y`                | Boolean | The value `true` means the gyroscope (y axis) is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_gyroscope_z`                | Boolean | The value `true` means the gyroscope (z axis) is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_accelerometer_x`            | Boolean | The value `true` means the accelerometer (x axis) is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_accelerometer_y`            | Boolean | The value `true` means the accelerometer (y axis) is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_accelerometer_z`            | Boolean | The value `true` means the accelerometer (z axis) is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_magnetometer`               | Boolean | The value `true` means the magnetometer is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_wake_on_motion`             | Boolean | The value `true` means the Wake On Motion is enabled. The value `false` means it is disabled. The default value is `false`.
++-`accelerometer_range`               | Number  | The value must be an integer in the range of 0 to 3: 0 means 2G, 1 means 4G, and 3 means 16G.
 `humidity`                            | Object  | This object represents the configurations of the humidity service (humidity sensor)
->> `enable_humidity_sensor`            | Boolean | The value `true` means the humidity sensor is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_humidity_sensor`            | Boolean | The value `true` means the humidity sensor is enabled. The value `false` means it is disabled. The default value is `false`.
 `pressure`                            | Object  | This object represents the configurations of the pressure service (barometric pressure sensor)
->> `enable_barometric_pressure_sensor` | Boolean | The value `true` means the barometric pressure sensor is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_barometric_pressure_sensor` | Boolean | The value `true` means the barometric pressure sensor is enabled. The value `false` means it is disabled. The default value is `false`.
 `optical`                             | Object  | This object represents the configurations of the optical service (optical sensor)
->> `enable_optical_sensor`             | Boolean | The value `true` means the optical sensor is enabled. The value `false` means it is disabled. The default value is `false`.
++-`enable_optical_sensor`             | Boolean | The value `true` means the optical sensor is enabled. The value `false` means it is disabled. The default value is `false`.
 `io`                                  | Object  | This object represents the configurations of the IO service (2 buttons on the CC2650 SensorTag)
->> `mode`                              | Number  | This configuration represents the mode of the IO service: 0: local mode, 1: remote mode, 2: test mode. Though the default value of the CC2650 SensorTag is 0 (local mode), this Javascript library set it to 1 (remote mode) automatically. Never change this value using the [`writeConfigurations`](#writeConfigurations-method) method.
++-`mode`                              | Number  | This configuration represents the mode of the IO service: 0: local mode, 1: remote mode, 2: test mode. Though the default value of the CC2650 SensorTag is 0 (local mode), this Javascript library set it to 1 (remote mode) automatically. Never change this value using the [`writeConfigurations`](#writeConfigurations-method) method.
 
 If you want to enable all of the sensors, you can use the [`writeConfigurations`](#writeConfigurations-method) method like this:
 
