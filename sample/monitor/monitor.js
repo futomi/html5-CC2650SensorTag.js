@@ -1,9 +1,9 @@
 /* ------------------------------------------------------------------
 * TI CC2650 SensorTag Monitor - monitor.js
 *
-* Copyright (c) 2016, Futomi Hatano, All rights reserved.
+* Copyright (c) 2016 - 2017, Futomi Hatano, All rights reserved.
 * Released under the MIT license
-* Date: 2016-12-29
+* Date: 2017-09-22
 * ---------------------------------------------------------------- */
 
 (function() {
@@ -248,7 +248,11 @@ SensorTagMonitor.prototype.connectDevice = function() {
 		this.hideConnectingModal();
 		window.scrollTo(0, 0);
 	}).catch((error) => {
-		this.showMessageModal('Connection Error', error.message);
+		console.error(error);
+		this.hideConnectingModal();
+		window.setTimeout(() => {
+			this.showMessageModal('Connection Error', error.message);
+		}, 500);
 	});
 }
 
